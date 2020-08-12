@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+  messagesPack="com.kanto.petclinic.web.screens.visit"
+  xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
+  extends="com/haulmont/sample/petclinic/web/screens/visit/visit-edit.xml">
+  <layout>
+    <form id="fieldGroup">
+      <column id="column1">
+        <textArea
+          id="previousIllnessesField"
+          rows="5"
+          property="previousIllnesses"
+          colspan="2"
+          width="100%"/>
+      </column>
+    </form>
+  </layout>
+</window>

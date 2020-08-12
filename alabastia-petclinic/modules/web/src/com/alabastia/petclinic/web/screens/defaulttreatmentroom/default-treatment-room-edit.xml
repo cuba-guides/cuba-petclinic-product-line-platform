@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+  caption="msg://defaultTreatmentRoomEdit.caption"
+  focusComponent="form"
+  messagesPack="com.alabastia.petclinic.web.screens.defaulttreatmentroom">
+  <data>
+    <instance id="defaultTreatmentRoomDc"
+      class="com.alabastia.petclinic.entity.DefaultTreatmentRoom">
+      <view extends="_local">
+        <property name="user" view="_minimal"/>
+        <property name="treatmentRoom" view="_minimal"/>
+      </view>
+      <loader/>
+    </instance>
+    <collection id="usersDc" class="com.haulmont.cuba.security.entity.User" view="_minimal">
+      <loader id="usersDl">
+        <query>
+          <![CDATA[select e from sec$User e]]>
+        </query>
+      </loader>
+    </collection>
+    <collection id="treatmentRoomsDc" class="com.alabastia.petclinic.entity.TreatmentRoom"
+      view="_minimal">
+      <loader id="treatmentRoomsDl">
+        <query>
+          <![CDATA[select e from alabastiapetclinic_TreatmentRoom e]]>
+        </query>
+      </loader>
+    </collection>
+  </data>
+  <dialogMode height="600"
+    width="800"/>
+  <layout expand="editActions" spacing="true">
+    <form id="form" dataContainer="defaultTreatmentRoomDc">
+      <column width="350px">
+        <lookupPickerField id="userField" optionsContainer="usersDc" property="user"/>
+        <lookupPickerField id="treatmentRoomField" optionsContainer="treatmentRoomsDc"
+          property="treatmentRoom"/>
+      </column>
+    </form>
+    <hbox id="editActions" spacing="true">
+      <button action="windowCommitAndClose"/>
+      <button action="windowClose"/>
+    </hbox>
+  </layout>
+</window>

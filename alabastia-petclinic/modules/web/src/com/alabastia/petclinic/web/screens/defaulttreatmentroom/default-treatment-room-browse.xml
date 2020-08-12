@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+  xmlns:c="http://schemas.haulmont.com/cuba/screen/jpql_condition.xsd"
+  caption="msg://defaultTreatmentRoomBrowse.caption"
+  focusComponent="defaultTreatmentRoomsTable"
+  messagesPack="com.alabastia.petclinic.web.screens.defaulttreatmentroom">
+  <data readOnly="true">
+    <collection id="defaultTreatmentRoomsDc"
+      class="com.alabastia.petclinic.entity.DefaultTreatmentRoom">
+      <view extends="_local">
+        <property name="user" view="_minimal"/>
+        <property name="treatmentRoom" view="_minimal"/>
+      </view>
+      <loader id="defaultTreatmentRoomsDl">
+        <query>
+          <![CDATA[select e from alabastiapetclinic_DefaultTreatmentRoom e]]>
+        </query>
+      </loader>
+    </collection>
+  </data>
+  <dialogMode height="600"
+    width="800"/>
+  <layout expand="defaultTreatmentRoomsTable"
+    spacing="true">
+    <filter id="filter"
+      applyTo="defaultTreatmentRoomsTable"
+      dataLoader="defaultTreatmentRoomsDl">
+      <properties include=".*"/>
+    </filter>
+    <groupTable id="defaultTreatmentRoomsTable"
+      width="100%"
+      dataContainer="defaultTreatmentRoomsDc">
+      <actions>
+        <action id="create" type="create"/>
+        <action id="edit" type="edit"/>
+        <action id="remove" type="remove"/>
+      </actions>
+      <columns>
+        <column id="user"/>
+        <column id="treatmentRoom"/>
+      </columns>
+      <rowsCount/>
+      <buttonsPanel id="buttonsPanel"
+        alwaysVisible="true">
+        <button id="createBtn" action="defaultTreatmentRoomsTable.create"/>
+        <button id="editBtn" action="defaultTreatmentRoomsTable.edit"/>
+        <button id="removeBtn" action="defaultTreatmentRoomsTable.remove"/>
+      </buttonsPanel>
+    </groupTable>
+    <hbox id="lookupActions" spacing="true" visible="false">
+      <button action="lookupSelectAction"/>
+      <button action="lookupCancelAction"/>
+    </hbox>
+  </layout>
+</window>

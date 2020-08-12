@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+  messagesPack="com.alabastia.petclinic.web.screens.visit"
+  xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
+  extends="com/haulmont/sample/petclinic/web/screens/visit/visit-edit.xml">
+  <data>
+    <collection id="treatmentRoomsDc" class="com.alabastia.petclinic.entity.TreatmentRoom"
+      view="_minimal">
+      <loader>
+        <query>
+          <![CDATA[select e from alabastiapetclinic_TreatmentRoom e]]>
+        </query>
+      </loader>
+    </collection>
+  </data>
+  <layout>
+    <form id="fieldGroup">
+      <column id="column2">
+        <lookupField ext:index="2" id="treatmentRoomField" property="treatmentRoom"
+          optionsContainer="treatmentRoomsDc"/>
+      </column>
+    </form>
+  </layout>
+</window>

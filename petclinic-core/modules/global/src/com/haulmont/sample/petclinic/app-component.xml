@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<app-component xmlns="http://schemas.haulmont.com/cuba/app-component.xsd"
+  dependsOn="com.haulmont.cuba, com.haulmont.addon.helium">
+
+  <module name="global" blocks="*">
+    <artifact name="petclinic-global" appJar="true"/>
+
+    <property name="cuba.persistenceConfig" value="+com/haulmont/sample/petclinic/persistence.xml"/>
+    <property name="cuba.metadataConfig" value="+com/haulmont/sample/petclinic/metadata.xml"/>
+    <property name="cuba.viewsConfig" value="+com/haulmont/sample/petclinic/views.xml"/>
+  </module>
+  <module name="core" dependsOn="global" blocks="core">
+    <artifact name="petclinic-core" appJar="true"/>
+    <artifact name="petclinic-core" classifier="db" ext="zip" configuration="dbscripts"/>
+
+    <property name="cuba.springContextConfig" value="+com/haulmont/sample/petclinic/spring.xml"/>
+    <property name="cuba.mainMessagePack" value="+com.haulmont.sample.petclinic.core"/>
+  </module>
+  <module name="web" dependsOn="global" blocks="web">
+    <artifact name="petclinic-web" appJar="true"/>
+    <artifact name="petclinic-web" classifier="web" ext="zip" configuration="webcontent"/>
+    <artifact name="petclinic-web" ext="jar" configuration="themes" classifier="themes"/>
+
+
+    <property name="cuba.springContextConfig"
+      value="+com/haulmont/sample/petclinic/web-spring.xml"/>
+    <property name="cuba.dispatcherSpringContextConfig"
+      value="+com/haulmont/sample/petclinic/web-dispatcher-spring.xml"/>
+    <property name="cuba.windowConfig" value="+com/haulmont/sample/petclinic/web-screens.xml"/>
+    <property name="cuba.menuConfig" value="+com/haulmont/sample/petclinic/web-menu.xml"/>
+    <property name="cuba.permissionConfig"
+      value="+com/haulmont/sample/petclinic/web-permissions.xml"/>
+    <property name="cuba.mainMessagePack" value="+com.haulmont.sample.petclinic.web"/>
+    <property name="cuba.iconsConfig"
+      value="+com.haulmont.sample.petclinic.web.screens.visit.VisitTypeIcon"/>
+    <property name="cuba.themeConfig"
+      value="+/com/haulmont/sample/petclinic/web/helium-theme.properties"/>
+  </module>
+</app-component>

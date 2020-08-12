@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+  <menu id="application-alabastiapetclinic"
+    caption="mainMsg://menu-config.application-alabastiapetclinic">
+  <item screen="alabastiapetclinic_TreatmentRoom.browse"
+    caption="mainMsg://menu_config.alabastiapetclinic_TreatmentRoom.browse"/>
+  <item screen="alabastiapetclinic_DefaultTreatmentRoom.browse"
+    caption="mainMsg://menu_config.alabastiapetclinic_DefaultTreatmentRoom.browse"/>
+  </menu>
+</menu-config>
