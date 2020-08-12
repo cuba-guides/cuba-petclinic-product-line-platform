@@ -11,17 +11,17 @@ This example shows how to use CUBA's application components in order to build cu
 #### Petclinic Core
 The [petclinic-core](/petclinic-core) directory contains the regular CUBA Petclinic project. In order to act as an application component the [app-component.xml](/petclinic-core/modules/global/src/com/haulmont/sample/petclinic/app-component.xml) has been created (via CUBA studio).
 
-#### Lancaster Petclinic
+#### Alabastia Petclinic
 
-The [lancaster-petclinic](/lancaster-petclinic) project is a CUBA application, that uses the Petclinic as a basis. It contains some customizations, that are described in the [README](/lancaster-petclinic/README.md) of the project.
+The [alabastia-petclinic](/alabastia-petclinic) project is a CUBA application, that uses the Petclinic as a basis. It contains some customizations, that are described in the [README](/alabastia-petclinic/README.md) of the project.
 
-The way it uses the petclinic-core is by adding it as a application-component in the [build.gradle](/lancaster-petclinic/build.gradle#L39).
+The way it uses the petclinic-core is by adding it as a application-component in the [build.gradle](/alabastia-petclinic/build.gradle#L39).
 
 
 
-#### Rocky Mount Petclinic
+#### Kanto Petclinic
 
-The [rocky-mount-petclinic](/rocky-mount-petclinic) project is a CUBA application, that uses the Petclinic as a basis. It contains some customizations, that are described in the [README](/rocky-mount-petclinic/README.md) of the project.
+The [kanto-petclinic](/kanto-petclinic) project is a CUBA application, that uses the Petclinic as a basis. It contains some customizations, that are described in the [README](/kanto-petclinic/README.md) of the project.
 
 The way it uses the petclinic-core is by adding it as a application-component in the [build.gradle](/rocky-mount/build.gradle#L37).
 
