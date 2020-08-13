@@ -34,7 +34,7 @@ cuba {
 
 dependencies {
     appComponent("com.haulmont.cuba:cuba-global:$cubaVersion")
-    appComponent('com.haulmont.sample.petclinic:petclinic-global:2.0.0')
+    appComponent('com.haulmont.sample.petclinic:petclinic-global:2.0')
 }
 
 def hsql = 'org.hsqldb:hsqldb:2.4.1'
