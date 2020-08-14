@@ -19,6 +19,9 @@
         />
       </parameters>
     </inputDialog>
+    <notification id="visitCreatedNotification"
+      type="TRAY"
+      caption="msg://visitCreated" />
   </facets>
   <layout>
     <groupTable id="petsTable">

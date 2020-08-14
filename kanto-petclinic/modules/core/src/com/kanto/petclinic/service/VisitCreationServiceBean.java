@@ -5,6 +5,7 @@ import com.haulmont.cuba.core.global.TimeSource;
 import com.haulmont.sample.petclinic.entity.pet.Pet;
 import com.haulmont.sample.petclinic.entity.visit.Visit;
 import com.haulmont.sample.petclinic.entity.visit.VisitType;
+import java.time.LocalDateTime;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,11 @@ public class VisitCreationServiceBean implements VisitCreationService {
         final Visit visitForPet = dataManager.create(Visit.class);
 
         visitForPet.setPet(pet);
-        visitForPet.setVisitStart(timeSource.now().toLocalDateTime());
-        visitForPet.setVisitEnd(timeSource.now().toLocalDateTime().plusHours(1));
-
         visitForPet.setType(visitType);
+
+        final LocalDateTime now = timeSource.now().toLocalDateTime();
+        visitForPet.setVisitStart(now);
+        visitForPet.setVisitEnd(now.plusHours(1));
 
         return dataManager.commit(visitForPet);
     }
