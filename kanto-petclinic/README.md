@@ -51,7 +51,7 @@ the Visit Editor screen has been extend to place the `treatmentRoom` lookup fiel
   xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
   extends="com/haulmont/sample/petclinic/web/screens/visit/visit-edit.xml">
   <layout>
-    <form id="fieldGroup">
+    <form id="form">
       <column id="column1">
         <textArea
           id="previousIllnessesField"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
         caption="msg://editorCaption"
-        focusComponent="fieldGroup"
+        focusComponent="form"
         messagesPack="com.haulmont.sample.petclinic.web.screens.visit">
     <data>
         <instance id="visitDc"
@@ -24,7 +24,7 @@
     </data>
     <dialogMode width="800"/>
     <layout expand="editActions" spacing="true">
-        <form id="fieldGroup" dataContainer="visitDc">
+        <form id="form" dataContainer="visitDc">
             <column width="250px" id="column1">
                 <dateField property="visitStart"/>
                 <lookupPickerField property="pet" optionsContainer="petsDc"/>

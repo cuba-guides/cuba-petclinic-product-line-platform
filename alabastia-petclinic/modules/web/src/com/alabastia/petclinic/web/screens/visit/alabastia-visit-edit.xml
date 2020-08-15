@@ -14,7 +14,7 @@
     </collection>
   </data>
   <layout>
-    <form id="fieldGroup">
+    <form id="form">
       <column id="column2">
         <lookupField ext:index="2" id="treatmentRoomField" property="treatmentRoom"
           optionsContainer="treatmentRoomsDc"/>

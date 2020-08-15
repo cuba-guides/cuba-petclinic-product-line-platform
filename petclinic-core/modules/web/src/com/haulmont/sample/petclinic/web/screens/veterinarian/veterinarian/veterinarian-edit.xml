@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
         caption="msg://editorCaption"
-        focusComponent="fieldGroup"
+        focusComponent="form"
         messagesPack="com.haulmont.sample.petclinic.web.screens.veterinarian.veterinarian">
     <data>
         <instance id="veterinarianDc"
@@ -18,7 +18,7 @@
                 width="800"/>
 
     <layout expand="editActions" spacing="true">
-        <form id="fieldGroup" dataContainer="veterinarianDc">
+        <form id="form" dataContainer="veterinarianDc">
             <column width="250px">
                 <textField property="firstName"/>
                 <textField property="lastName"/>

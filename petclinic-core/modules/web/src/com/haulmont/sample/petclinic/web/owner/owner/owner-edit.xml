@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
         caption="msg://editorCaption"
-        focusComponent="fieldGroup"
+        focusComponent="form"
         messagesPack="com.haulmont.sample.petclinic.web.owner.owner">
     <data>
         <instance id="ownerDc"
@@ -15,7 +15,7 @@
                 width="800"/>
     <layout expand="petsBox" spacing="true">
         <label stylename="h2" id="titleLabel" />
-        <form id="fieldGroup" dataContainer="ownerDc">
+        <form id="form" dataContainer="ownerDc">
             <column width="200px">
                 <textField property="firstName"/>
                 <textField property="address"/>

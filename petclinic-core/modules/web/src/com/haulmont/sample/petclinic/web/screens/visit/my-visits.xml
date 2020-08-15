@@ -67,8 +67,8 @@
                     <button action="lookupCancelAction"/>
                 </hbox>
             </vbox>
-            <vbox id="editBox"  margin="true" expand="fieldGroupBox" spacing="true">
-                <scrollBox id="fieldGroupBox">
+            <vbox id="editBox"  margin="true" expand="formBox" spacing="true">
+                <scrollBox id="formBox">
                     <form id="form" dataContainer="visitDc" editable="false">
                         <column width="250px">
                             <dateField property="visitStart"/>

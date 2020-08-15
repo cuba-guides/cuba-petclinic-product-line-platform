@@ -55,8 +55,8 @@
                     <button action="lookupCancelAction"/>
                 </hbox>
             </vbox>
-            <vbox id="editBox" height="100%" margin="false,false,false,true" expand="fieldGroupBox" spacing="true">
-                <scrollBox id="fieldGroupBox">
+            <vbox id="editBox" height="100%" margin="false,false,false,true" expand="formBox" spacing="true">
+                <scrollBox id="formBox">
                     <form id="form" dataContainer="petTypeDc">
                         <column width="250px">
                             <textField id="nameField" property="name"/>

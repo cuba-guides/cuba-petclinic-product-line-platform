@@ -76,7 +76,7 @@ the Visit Editor screen has been extend to place the `treatmentRoom` lookup fiel
     </collection>
   </data>
   <layout>
-    <form id="fieldGroup">
+    <form id="form">
       <column id="column2">
         <lookupField ext:index="2" id="treatmentRoomField" property="treatmentRoom"
           optionsContainer="treatmentRoomsDc"/>
