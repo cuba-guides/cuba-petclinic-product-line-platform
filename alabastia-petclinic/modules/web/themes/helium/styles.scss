@@ -1,0 +1,11 @@
+@import "helium-defaults";
+@import "com.alabastia.petclinic/helium-ext-defaults";
+@import "app-components";
+@import "com.alabastia.petclinic/helium-ext";
+
+.helium {
+  // include auto-generated app components SCSS
+  @include app_components;
+
+  @include com_alabastia_petclinic-helium-ext;
+}

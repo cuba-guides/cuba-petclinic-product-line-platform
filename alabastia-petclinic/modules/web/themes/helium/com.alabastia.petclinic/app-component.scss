@@ -1,0 +1,5 @@
+@import "helium-ext";
+
+@mixin com_alabastia_petclinic {
+  @include com_alabastia_petclinic-helium-ext;
+}

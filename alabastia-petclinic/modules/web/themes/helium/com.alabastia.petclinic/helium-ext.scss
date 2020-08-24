@@ -1,0 +1,31 @@
+/* Define your theme modifications inside next mixin */
+@mixin com_alabastia_petclinic-helium-ext {
+
+  --white: #FFFFFF;
+  --white_rgb: 255, 255, 255;
+
+  /* Basic */
+  --primary-color: #7aFebc5;
+  --primary-color_rgb: 134, 122, 235;
+
+
+  --secondary-color: #FFD042;
+  --secondary-color_rgb: 255, 208, 66;
+  --success-color: #83C93C;
+
+  /* Common */
+  --primary-color-shade-1: #5ce6b8;
+  --primary-color-shade-2: #3de0aa;
+  --primary-dim-color: #a2f2d8;
+  --secondary-color-shade-1: #FFC61A;
+  --secondary-color-shade-2: #FABB00;
+  --secondary-contrast-text-color: #2C3436;
+  --secondary-dim-color: #FFDD75;
+  --success-color-shade-1: #75B332;
+  --success-color-shade-2: #689F2D;
+  --success-dim-color: #A7D874;
+
+  /* SideMenu */
+  --dark-purple: #4cad8d;
+  --main-menu-purple: #56bf9c;
+}

@@ -24,8 +24,8 @@ apply(plugin: 'cuba')
 cuba {
   artifact {
     group = 'com.haulmont.sample.petclinic'
-    version = '2.0'
-    isSnapshot = false
+    version = '2.0.2'
+    isSnapshot = true
   }
 }
 
