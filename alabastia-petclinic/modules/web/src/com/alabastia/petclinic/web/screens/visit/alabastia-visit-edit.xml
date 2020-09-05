@@ -4,9 +4,20 @@
   xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
   extends="com/haulmont/sample/petclinic/web/screens/visit/visit-edit.xml">
   <data>
+    <instance id="defaultTreatmentRoomDc"
+      class="com.alabastia.petclinic.entity.DefaultTreatmentRoom">
+      <view extends="_local">
+        <property name="treatmentRoom" view="_minimal" />
+      </view>
+      <loader id="defaultTreatmentRoomLc">
+        <query>
+          <![CDATA[select e from alabastiapetclinic_DefaultTreatmentRoom e where e.user = :currentUser]]>
+        </query>
+      </loader>
+    </instance>
     <collection id="treatmentRoomsDc" class="com.alabastia.petclinic.entity.TreatmentRoom"
       view="_minimal">
-      <loader>
+      <loader id="treatmentRoomsDl">
         <query>
           <![CDATA[select e from alabastiapetclinic_TreatmentRoom e]]>
         </query>

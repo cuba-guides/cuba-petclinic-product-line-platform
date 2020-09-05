@@ -5,196 +5,152 @@ which needs some adjustments over the standard Petclinic product.
 
 In particular the following adjustments have been made:
 
-### Functional Adjustments
+#### Idea: Declarative DataManager Loading
 
-#### Visit Creation
+In this branch the default treatment room in the UI is not loaded via `dataManager.load(DefaultTreatmentRoom.class).query("...").optional()`.
 
-* a visit needs to be assigned to a treatment room
-* the treatment room should be set to the default treatment room, that is assigned to the current user
+Instead the `dataCotainer` concept is utilized to define the loading of the optional instance
+of the `DefaultTreatmentRoom` in a declarative XML based manner. This way, the java code is simplified in the controller. It only requires to define the parameter as well as pick up the value via `defaultTreatmentRoomDc.getItem()`.
 
-#### Visit Management
+#### The Reason: higher level abstraction
 
-* Visit Calendars default view is monthly, not weekly 
+The reason behind it is the same which led to the introduction of the various screen facets like the `MessageDialogFacet`. It pushes the complexity of "how to load a particular entity" into the declarative XML part. The Java code then can just rely on the `defaultTreatmentRoomDc` to correctly fetched the data. This simplifies the java code and provides a higher level abstraction in the UI controller to work with.
 
-#### Workflow Adjustments
 
-* at the Alabastia Petclinic there is a dedicated reception which deals with the process of onboarding new Owners and Pets
+#### Example: Default Treatment Room Lookup
 
-### Technical Adjustments
+The declarative definition of the instance container looks like this:
 
-#### Data Model
-
-In order to support those business requirements the data model has been adjusted accordingly:
-
-* an entity `TreatmentRoom` has been added to model the rooms that are available within the Petclinic.
-* an entity `DefaultTreatmentRoom` links a User to a Treatment Room
-
-##### Visit Entity extension
-The Visit entity has been extended to store a link to the Treatment Room:
-
-```java
-@Extends(Visit.class)
-@Entity(name = "alabastiapetclinic_AlabastiaVisit")
-@DiscriminatorValue("AlabastiaVisit")
-public class AlabastiaVisit extends Visit {
-
-    private static final long serialVersionUID = 430933193584847493L;
-
-    @Lookup(type = LookupType.DROPDOWN, actions = {})
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TREATMENT_ROOM_ID")
-    private TreatmentRoom treatmentRoom;
-
-    public TreatmentRoom getTreatmentRoom() {
-        return treatmentRoom;
-    }
-
-    public void setTreatmentRoom(TreatmentRoom treatmentRoom) {
-        this.treatmentRoom = treatmentRoom;
-    }
-}
-```
-
-#### Screen Extensions
-
-the Visit Editor screen has been extend to place the `treatmentRoom` lookup field inside the form component:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
-  messagesPack="com.alabastia.petclinic.web.screens.visit"
-  xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
-  extends="com/haulmont/sample/petclinic/web/screens/visit/visit-edit.xml">
-  <data>
-    <collection id="treatmentRoomsDc" class="com.alabastia.petclinic.entity.TreatmentRoom"
-      view="_minimal">
-      <loader>
-        <query>
-          <![CDATA[select e from alabastiapetclinic_TreatmentRoom e]]>
-        </query>
-      </loader>
-    </collection>
-  </data>
-  <layout>
-    <form id="form">
-      <column id="column2">
-        <lookupField ext:index="2" id="treatmentRoomField" property="treatmentRoom"
-          optionsContainer="treatmentRoomsDc"/>
-      </column>
-    </form>
-  </layout>
-</window>
+<instance id="defaultTreatmentRoomDc"
+      class="com.alabastia.petclinic.entity.DefaultTreatmentRoom">
+  <view extends="_local">
+    <property name="treatmentRoom" view="_minimal" />
+  </view>
+  <loader id="defaultTreatmentRoomLc">
+    <query>
+      <![CDATA[select e from alabastiapetclinic_DefaultTreatmentRoom e where e.user = :currentUser]]>
+    </query>
+  </loader>
+</instance>
 ```
 
-The lookup field is placed at the correct position within the form via the `ext:index="2"` XML attribute.
 
-#### Security Extensions
-
-In order to give the users access to the new Entities and screens, the design time roles have been extended in this project:
+The controller code is simplified as described above:
 
 ```java
+public class AlabastiaVisitEdit extends VisitEdit {
+    @Inject
+    protected InstanceContainer<DefaultTreatmentRoom> defaultTreatmentRoomDc;
+    @Inject
+    protected InstanceLoader<DefaultTreatmentRoom> defaultTreatmentRoomLc;
 
-@Role(name = NurseRole.NAME)
-public class AlabastiaNurseRole extends NurseRole {
-
-    @EntityAccess(entityClass = Visit.class, operations = {EntityOp.CREATE, EntityOp.READ, EntityOp.UPDATE, EntityOp.DELETE})
-    // ...
-
-    @EntityAccess(entityClass = TreatmentRoom.class, operations = {EntityOp.READ})
-    @EntityAccess(entityClass = DefaultTreatmentRoom.class, operations = {EntityOp.READ})
-    @Override
-    public EntityPermissionsContainer entityPermissions() {
-        return super.entityPermissions();
+    @Subscribe
+    protected void onInit(InitEvent event) {
+        // provide the declarative dataContainer with required parameter
+        defaultTreatmentRoomLc.setParameter("currentUser", currentUser());
     }
+    
+    @Subscribe
+    protected void onAfterShow(AfterShowEvent event) {
 
+        if (entityStates.isNew(getEditedEntity())) {
 
-    @EntityAttributeAccess(entityClass = Owner.class, modify = "*")
-    // ...
+            getEditedEntity().setAssignedNurse(
+                currentUser()
+            );
 
-    @EntityAttributeAccess(entityClass = TreatmentRoom.class, view = "*")
-    @EntityAttributeAccess(entityClass = DefaultTreatmentRoom.class, view = "*")
-    @Override
-    public EntityAttributePermissionsContainer entityAttributePermissions() {
-        return super.entityAttributePermissions();
+            // retrieve a possible configured default treatment room through declarative dataContainer
+            final TreatmentRoom defaultTreatmentRoom =
+                defaultTreatmentRoomDc.getItem().getTreatmentRoom();
+
+            initTreatmentRoom(defaultTreatmentRoom);
+        }
     }
-
-
-    @ScreenAccess(screenIds = {
-        "petclinic_myVisits",
-        // ...
-        "petclinic_Specialty.edit",
-        
-        "application-alabastiapetclinic",
-        "alabastiapetclinic_DefaultTreatmentRoom.browse",
-        "alabastiapetclinic_DefaultTreatmentRoom.edit",
-        "alabastiapetclinic_TreatmentRoom.browse",
-        "alabastiapetclinic_TreatmentRoom.edit"
-    })
-    @Override
-    public ScreenPermissionsContainer screenPermissions() {
-        return super.screenPermissions();
-    }
-
 }
 ```
 
 
-Instead of Nurses at Alabastia there is a new Role `Receptionist` that is responsible for managing Pets and Owners:
+
+### Current Problems with the declarative approach
+
+Currently it works well for the happy path: the `instanceContainer` actually returns a value. The problem occurs when there is no result. For a regular `instanceContainer` this is not very often the case, because
+normally an instance container is not used together with an associated data loader and a query.
+
+But in this situation, the instance not being present by the query might be a valid business situation.
+
+Currently, the `InstanceLoaderImpl` throws an exception in case the entity is not found:
 
 ```java
-package com.alabastia.petclinic.core.role;
+entity = getDataManager().load(loadContext);
 
-import com.haulmont.cuba.security.app.role.AnnotatedRoleDefinition;
-import com.haulmont.cuba.security.app.role.annotation.EntityAccess;
-import com.haulmont.cuba.security.app.role.annotation.EntityAttributeAccess;
-import com.haulmont.cuba.security.app.role.annotation.Role;
-import com.haulmont.cuba.security.app.role.annotation.ScreenAccess;
-import com.haulmont.cuba.security.entity.EntityOp;
-import com.haulmont.cuba.security.entity.User;
-import com.haulmont.cuba.security.role.EntityAttributePermissionsContainer;
-import com.haulmont.cuba.security.role.EntityPermissionsContainer;
-import com.haulmont.cuba.security.role.ScreenPermissionsContainer;
-import com.haulmont.sample.petclinic.entity.owner.Owner;
-import com.haulmont.sample.petclinic.entity.pet.Pet;
-import com.haulmont.sample.petclinic.entity.pet.PetType;
-import com.haulmont.sample.petclinic.entity.veterinarian.Specialty;
-import com.haulmont.sample.petclinic.entity.veterinarian.Veterinarian;
-import com.haulmont.sample.petclinic.entity.visit.Visit;
-import com.alabastia.petclinic.entity.DefaultTreatmentRoom;
-import com.alabastia.petclinic.entity.TreatmentRoom;
-
-@Role(name = ReceptionistRole.NAME)
-public class ReceptionistRole extends AnnotatedRoleDefinition {
-
-    public final static String NAME = "Receptionist";
-
-    @EntityAccess(entityClass = Pet.class, operations = {EntityOp.CREATE, EntityOp.READ, EntityOp.UPDATE, EntityOp.DELETE})
-    @EntityAccess(entityClass = Owner.class, operations = {EntityOp.CREATE, EntityOp.READ, EntityOp.UPDATE, EntityOp.DELETE})
-    @Override
-    public EntityPermissionsContainer entityPermissions() {
-        return super.entityPermissions();
-    }
-
-
-    @EntityAttributeAccess(entityClass = Owner.class, modify = "*")
-    @EntityAttributeAccess(entityClass = Pet.class, modify = "*")
-    @EntityAttributeAccess(entityClass = User.class, view = "*")
-    @Override
-    public EntityAttributePermissionsContainer entityAttributePermissions() {
-        return super.entityAttributePermissions();
-    }
-
-
-    @ScreenAccess(screenIds = {
-        "petclinic_Pet.browse",
-        "petclinic_Pet.edit",
-        "petclinic_Owner.browse",
-        "petclinic_Owner.edit"
-    })
-    @Override
-    public ScreenPermissionsContainer screenPermissions() {
-        return super.screenPermissions();
-    }
-
+if (entity == null) {
+    throw new EntityAccessException(container.getEntityMetaClass(), entityId);
 }
 ```
+
+
+Therefore, it requires in the controller to catch this exception as well as explicitly trigger the dataLoader.load() in order to programmatically catch the exception.
+
+
+### Proposed Solution
+
+In order to make the usage of `dataContainer` as a declarative way of using the `dataManager` for this scenario work, it should be possible to mark an instance container as optional. This way when the `instanceContainer` is loaded and no result is found `getItem()` would either return null or alternatively an instance of `Optional<DefaultTreatmentRoom>`.
+
+The resulting XML:
+
+
+
+```xml
+<instance id="defaultTreatmentRoomDc"
+      optional="true"
+      class="com.alabastia.petclinic.entity.DefaultTreatmentRoom">
+  <view extends="_local">
+    <property name="treatmentRoom" view="_minimal" />
+  </view>
+  <loader id="defaultTreatmentRoomLc">
+    <query>
+      <![CDATA[select e from alabastiapetclinic_DefaultTreatmentRoom e where e.user = :currentUser]]>
+    </query>
+  </loader>
+</instance>
+```
+ 
+The corresponding controller code:
+
+```java
+public class AlabastiaVisitEdit extends VisitEdit {
+    @Inject
+    protected InstanceContainer<DefaultTreatmentRoom> defaultTreatmentRoomDc;
+    @Inject
+    protected InstanceLoader<DefaultTreatmentRoom> defaultTreatmentRoomLc;
+
+    @Subscribe
+    protected void onInit(InitEvent event) {
+        // provide the declarative dataContainer with required parameter
+        defaultTreatmentRoomLc.setParameter("currentUser", currentUser());
+    }
+    
+    @Subscribe
+    protected void onAfterShow(AfterShowEvent event) {
+
+        if (entityStates.isNew(getEditedEntity())) {
+
+            getEditedEntity().setAssignedNurse(
+                currentUser()
+            );
+
+            // retrieve a possible configured default treatment room through declarative dataContainer
+            if (defaultTreatmentRoomDc.getItem() != null) {
+               final TreatmentRoom defaultTreatmentRoom =
+                               defaultTreatmentRoomDc.getItem().getTreatmentRoom();
+               
+               initTreatmentRoom(defaultTreatmentRoom); 
+            }
+        }
+    }
+}
+```
+
+With this non-exception-when-null behavior it would also not require to explicitly trigger the dataLoader load anymore and the `@LoadDataBeforeShow`
